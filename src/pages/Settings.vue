@@ -41,14 +41,12 @@ export default {
   name: "SettingPage",
   data() {
     return {
-      darkTheme: false,
+      darkTheme: Dark.mode,
     };
   },
   methods: {
     setMode() {
       Dark.set(this.darkTheme);
-      console.log(Dark.mode);
-      console.log(Dark.isActive);
     },
   },
 };

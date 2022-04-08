@@ -26,12 +26,32 @@
 
           <q-card-section horizontal>
             <div class="col-6">
-              <q-toggle v-model="marcapasos" color="teal" label="Marcapasos" />
-              <q-toggle v-model="audifonos" color="teal" label="Audífonos" />
+              <q-toggle
+                v-model="marcapasos"
+                class="j-nf-tgg"
+                color="teal"
+                label="Marcapasos"
+              />
+              <q-toggle
+                v-model="audifonos"
+                class="j-nf-tgg"
+                color="teal"
+                label="Audífonos"
+              />
             </div>
             <div class="col-6">
-              <q-toggle v-model="embarazo" color="teal" label="Embarazo" />
-              <q-toggle v-model="protesis" color="teal" label="Prótesis" />
+              <q-toggle
+                v-model="embarazo"
+                class="j-nf-tgg"
+                color="teal"
+                label="Embarazo"
+              />
+              <q-toggle
+                v-model="protesis"
+                class="j-nf-tgg"
+                color="teal"
+                label="Prótesis"
+              />
             </div>
           </q-card-section>
         </q-form>
@@ -272,5 +292,9 @@ export default {
   font-size: 1.5em;
   margin-bottom: 8px;
   padding-left: 6px;
+}
+.j-nf-tgg {
+  margin-left: 6px;
+  margin-right: 6px;
 }
 </style>

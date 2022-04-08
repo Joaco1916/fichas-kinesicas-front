@@ -115,9 +115,9 @@
                   :label="btnLabel"
                 />
               </q-card-actions>
-              <q-card-section v-if="!register" class="text-center q-pa-sm">
+              <!--<q-card-section v-if="!register" class="text-center q-pa-sm">
                 <p class="text-grey-6">¿Olvidaste tu contraseña?</p>
-              </q-card-section>
+              </q-card-section>-->
               <q-card-section v-if="register" class="text-center q-pa-sm">
                 <p class="text-grey-6"></p>
               </q-card-section>

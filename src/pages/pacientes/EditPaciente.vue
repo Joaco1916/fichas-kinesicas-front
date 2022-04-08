@@ -137,13 +137,18 @@ export default {
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {
+          console.log(error.response.data);
+          let error_msg =
+            error.response.data.statusCode == 500
+              ? "El paciente tiene fichas asociadas, eliminalas primero"
+              : "Falló la eliminación del paciente";
           Notify.create({
             color: "negative",
             position: "top",
-            message: "Falló la eliminación del paciente",
+            message: error_msg,
             icon: "report",
           });
-          this.$router.push({ name: "pacientes" });
+          //this.$router.push({ name: "pacientes" });
         });
     },
   },
