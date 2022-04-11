@@ -67,12 +67,20 @@
     <q-card-actions class="q-px-lg j-np-button">
       <q-btn
         unelevated
+        :disable="loading_action"
         size="lg"
         @click="onSubmit(this.profile)"
         style="background: #00bfad !important"
         class="full-width text-white"
         label="Guardar"
-      />
+      >
+        <q-spinner
+          v-if="loading_action"
+          color="primary"
+          size="20px"
+          class="j-btnSpinner"
+        />
+      </q-btn>
     </q-card-actions>
     <q-card-actions class="q-px-lg">
       <q-btn
@@ -103,6 +111,7 @@ export default {
       passwordFieldType: "password",
       visibility: false,
       visibilityIcon: "visibility",
+      loading_action: false,
     };
   },
   methods: {
@@ -117,6 +126,7 @@ export default {
       this.visibilityIcon = this.visibility ? "visibility_off" : "visibility";
     },
     onSubmit(patient) {
+      this.loading_action = true;
       if (this.password == this.repassword) {
         this.$store
           .dispatch("auth/editProfile", {
@@ -127,13 +137,15 @@ export default {
             roles: this.roles,
           })
           .then(async () => {
-            console.log("genera el response.");
+            this.loading_action = false;
             this.$router.push({ name: "pacientes" });
           })
           .catch((error) => {
+            this.loading_action = false;
             console.log(error);
           });
       } else {
+        this.loading_action = false;
         Notify.create({
           color: "negative",
           position: "top",
@@ -184,5 +196,8 @@ export default {
   font-size: 1.5em;
   margin-bottom: 8px;
   padding-left: 6px;
+}
+.j-btnSpinner {
+  margin-left: 6px;
 }
 </style>

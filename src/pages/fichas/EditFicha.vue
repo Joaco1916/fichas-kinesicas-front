@@ -136,12 +136,20 @@
     <q-card-actions class="q-px-lg j-np-button">
       <q-btn
         unelevated
+        :disable="loading_action"
         size="lg"
         @click="onSubmit(this.fichaActual)"
         style="background: #00bfad !important"
         class="full-width text-white"
         label="Guardar"
-      />
+      >
+        <q-spinner
+          v-if="loading_action"
+          color="primary"
+          size="20px"
+          class="j-btnSpinner"
+        />
+      </q-btn>
     </q-card-actions>
     <q-card-actions class="q-px-lg">
       <q-btn
@@ -156,12 +164,20 @@
     <q-card-actions class="q-px-lg">
       <q-btn
         unelevated
+        :disable="loading_action"
         size="lg"
         @click="deleteFicha(this.fichaActual)"
         style="background: red !important"
         class="full-width text-white"
         label="Eliminar"
-      />
+      >
+        <q-spinner
+          v-if="loading_action"
+          color="primary"
+          size="20px"
+          class="j-btnSpinner"
+        />
+      </q-btn>
     </q-card-actions>
   </q-page>
 </template>
@@ -189,6 +205,7 @@ export default {
       irradiacion: null,
       atenuacion_agravacion: null,
       observaciones: null,
+      loading_action: false,
     };
   },
   methods: {
@@ -212,6 +229,7 @@ export default {
       this.observaciones = this.fichaActual.observaciones;
     },
     onSubmit(ficha) {
+      this.loading_action = true;
       this.$store
         .dispatch("fichas/editFicha", {
           ficha: ficha,
@@ -236,6 +254,7 @@ export default {
           },
         })
         .then(async () => {
+          this.loading_action = false;
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {
@@ -245,16 +264,19 @@ export default {
             message: "Falló la edición de la ficha",
             icon: "report",
           });
-          this.$router.push({ name: "pacientes" });
+          this.loading_action = false;
+          //this.$router.push({ name: "pacientes" });
         });
     },
     cancel() {
       this.$router.push({ name: "fichas" });
     },
     deleteFicha(ficha) {
+      this.loading_action = true;
       this.$store
         .dispatch("fichas/deleteFicha", { ficha: ficha })
         .then(async () => {
+          this.loading_action = false;
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {
@@ -264,7 +286,8 @@ export default {
             message: "Falló la eliminación de la ficha",
             icon: "report",
           });
-          this.$router.push({ name: "pacientes" });
+          this.loading_action = false;
+          //this.$router.push({ name: "pacientes" });
         });
     },
   },
@@ -325,5 +348,8 @@ export default {
   font-size: 1.5em;
   margin-bottom: 8px;
   padding-left: 6px;
+}
+.j-btnSpinner {
+  margin-left: 6px;
 }
 </style>

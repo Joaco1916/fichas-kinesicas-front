@@ -106,6 +106,7 @@ module.exports = configure(function (ctx) {
         "QSelect",
         "QCardSection",
         "QCardActions",
+        "QSpinner",
       ],
       // directives: [],
 

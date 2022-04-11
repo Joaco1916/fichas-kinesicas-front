@@ -21,7 +21,6 @@ export default defineComponent({
   methods: {
     loadData() {
       this.$store.dispatch("pacientes/getPacientes").then((response) => {
-        console.log(response.data.pacientes);
         this.pacientes = response.data.pacientes;
       });
     },

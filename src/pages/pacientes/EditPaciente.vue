@@ -48,12 +48,20 @@
     <q-card-actions class="q-px-lg j-np-button">
       <q-btn
         unelevated
+        :disable="loading_action"
         size="lg"
         @click="onSubmit(this.pacienteActual)"
         style="background: #00bfad !important"
         class="full-width text-white"
         label="Guardar"
-      />
+      >
+        <q-spinner
+          v-if="loading_action"
+          color="primary"
+          size="20px"
+          class="j-btnSpinner"
+        />
+      </q-btn>
     </q-card-actions>
     <q-card-actions class="q-px-lg">
       <q-btn
@@ -68,12 +76,20 @@
     <q-card-actions class="q-px-lg">
       <q-btn
         unelevated
+        :disable="loading_action"
         size="lg"
         @click="deletePatient(this.pacienteActual)"
         style="background: red !important"
         class="full-width text-white"
         label="Eliminar"
-      />
+      >
+        <q-spinner
+          v-if="loading_action"
+          color="primary"
+          size="20px"
+          class="j-btnSpinner"
+        />
+      </q-btn>
     </q-card-actions>
   </q-page>
 </template>
@@ -90,6 +106,7 @@ export default {
       telefono: null,
       calle: null,
       nroCalle: null,
+      loading_action: false,
     };
   },
   methods: {
@@ -102,6 +119,7 @@ export default {
       this.nroCalle = this.pacienteActual.nroCalle;
     },
     onSubmit(patient) {
+      this.loading_action = true;
       this.$store
         .dispatch("pacientes/editPaciente", {
           patient: patient,
@@ -115,29 +133,32 @@ export default {
           },
         })
         .then(async () => {
+          this.loading_action = false;
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {
+          this.loading_action = false;
           Notify.create({
             color: "negative",
             position: "top",
             message: "Falló la edición del paciente",
             icon: "report",
           });
-          this.$router.push({ name: "pacientes" });
+          //this.$router.push({ name: "pacientes" });
         });
     },
     cancel() {
       this.$router.push({ name: "pacientes" });
     },
     deletePatient(patient) {
+      this.loading_action = true;
       this.$store
         .dispatch("pacientes/deletePaciente", { patient: patient })
         .then(async () => {
+          this.loading_action = false;
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {
-          console.log(error.response.data);
           let error_msg =
             error.response.data.statusCode == 500
               ? "El paciente tiene fichas asociadas, eliminalas primero"
@@ -148,7 +169,7 @@ export default {
             message: error_msg,
             icon: "report",
           });
-          //this.$router.push({ name: "pacientes" });
+          this.loading_action = false;
         });
     },
   },
@@ -190,5 +211,8 @@ export default {
   font-size: 1.5em;
   margin-bottom: 8px;
   padding-left: 6px;
+}
+.j-btnSpinner {
+  margin-left: 6px;
 }
 </style>

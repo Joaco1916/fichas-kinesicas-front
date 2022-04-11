@@ -48,31 +48,50 @@
     <q-card-actions class="q-px-lg j-np-button">
       <q-btn
         unelevated
+        :disable="loading_action"
         size="lg"
         @click="onSubmit()"
         style="background: #00bfad !important"
         class="full-width text-white"
         label="Crear"
+        ><q-spinner
+          v-if="loading_action"
+          color="primary"
+          size="20px"
+          class="j-btnSpinner"
+      /></q-btn>
+    </q-card-actions>
+    <q-card-actions class="q-px-lg">
+      <q-btn
+        unelevated
+        size="lg"
+        @click="cancel()"
+        style="background: #00bfad !important"
+        class="full-width text-white"
+        label="Cancelar"
       />
     </q-card-actions>
   </q-page>
 </template>
 
 <script>
+import { Notify } from "quasar";
 export default {
   name: "NewPacientePage",
   data() {
     return {
-      name: null,
-      lastName: null,
-      email: null,
-      telefono: null,
-      calle: null,
-      nroCalle: null,
+      name: "",
+      lastName: "",
+      email: "",
+      telefono: "",
+      calle: "",
+      nroCalle: "",
+      loading_action: false,
     };
   },
   methods: {
     onSubmit() {
+      this.loading_action = true;
       this.$store
         .dispatch("pacientes/createPaciente", {
           name: this.name,
@@ -83,6 +102,7 @@ export default {
           nroCalle: this.nroCalle,
         })
         .then(async () => {
+          this.loading_action = false;
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {
@@ -92,8 +112,11 @@ export default {
             message: "Falló la creación del paciente",
             icon: "report",
           });
-          this.$router.push({ name: "pacientes" });
+          this.loading_action = false;
         });
+    },
+    cancel() {
+      this.$router.push({ name: "pacientes" });
     },
   },
 };
@@ -124,5 +147,8 @@ export default {
   font-size: 1.5em;
   margin-bottom: 8px;
   padding-left: 6px;
+}
+.j-btnSpinner {
+  margin-left: 6px;
 }
 </style>

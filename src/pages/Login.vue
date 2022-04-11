@@ -93,7 +93,6 @@ export default defineComponent({
           password: this.password,
         })
         .then(async () => {
-          console.log("genera el response.");
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {

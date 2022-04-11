@@ -107,13 +107,21 @@
               </q-card-section>
               <q-card-actions class="q-px-lg">
                 <q-btn
+                  :disable="loading_action"
                   unelevated
                   size="lg"
                   @click="submit"
                   style="background: #00bfad !important"
                   class="full-width text-white"
                   :label="btnLabel"
-                />
+                >
+                  <q-spinner
+                    v-if="loading_action"
+                    color="primary"
+                    size="20px"
+                    class="j-btnSpinner"
+                  />
+                </q-btn>
               </q-card-actions>
               <!--<q-card-section v-if="!register" class="text-center q-pa-sm">
                 <p class="text-grey-6">¿Olvidaste tu contraseña?</p>
@@ -139,6 +147,7 @@ export default {
       title: "Fichas kinésicas",
       email: "",
       username: "",
+      lastname: "",
       password: "",
       repassword: "",
       register: false,
@@ -146,6 +155,7 @@ export default {
       btnLabel: "Entrar",
       visibility: false,
       visibilityIcon: "visibility",
+      loading_action: false,
     };
   },
 
@@ -159,6 +169,8 @@ export default {
     },
 
     submit() {
+      this.loading_action = true;
+      //Registro y login
       if (this.register) {
         if (this.password == this.repassword) {
           const newparams = {
@@ -178,13 +190,16 @@ export default {
                   password: this.password,
                 })
                 .then(async () => {
+                  this.loading_action = false;
                   this.$router.push({ name: "pacientes" });
                 })
                 .catch((error) => {
+                  this.loading_action = false;
                   this.reset();
                 });
             })
             .catch((error) => {
+              this.loading_action = false;
               this.reset();
             });
         } else {
@@ -196,17 +211,22 @@ export default {
             message: "Las contraseñas no coinciden.",
             icon: "report",
           });
+          this.loading_action = false;
         }
-      } else {
+      }
+      //Login
+      else {
         this.$store
           .dispatch("auth/signIn", {
             email: this.email,
             password: this.password,
           })
           .then(async () => {
+            this.loading_action = false;
             this.$router.push({ name: "pacientes" });
           })
           .catch((error) => {
+            this.loading_action = false;
             this.reset();
           });
       }
@@ -216,7 +236,6 @@ export default {
       this.register = !this.register;
       this.title = this.register ? "Fichas kinésicas" : "Fichas kinésicas";
       this.btnLabel = this.register ? "Registrarse" : "Entrar";
-      console.log("final", this.register);
     },
     switchVisibility() {
       this.visibility = !this.visibility;
@@ -235,3 +254,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.j-btnSpinner {
+  margin-left: 6px;
+}
+</style>

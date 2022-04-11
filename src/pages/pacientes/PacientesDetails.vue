@@ -86,7 +86,6 @@ export default {
   name: "PacientesDetailsPage",
   methods: {
     editPatient() {
-      console.log("Edit patient");
       this.$router.push({ name: "pacientes-edit" });
     },
   },

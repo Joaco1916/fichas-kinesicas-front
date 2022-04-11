@@ -57,7 +57,6 @@ export function register({ commit }, credentials) {
         resolve(response);
       })
       .catch((error) => {
-        console.log(error.response.data);
         let trans_msg;
         let show = false;
         if (
@@ -67,11 +66,14 @@ export function register({ commit }, credentials) {
           Notify.create({
             color: "negative",
             position: "top",
-            message: trans_msg,
+            message: error.response.data.message,
             icon: "report_problem",
           });
         }
-        if (error.response.data.message.length > 1) {
+        if (
+          Array.isArray(error.response.data.message) &&
+          error.response.data.message.length > 1
+        ) {
           error.response.data.message.forEach((msg) => {
             switch (msg) {
               case "Este email ya tiene una cuenta creada.":
@@ -129,7 +131,6 @@ export function getProfile({ commit }) {
         resolve(response);
       })
       .catch((error) => {
-        console.log("error profile", error);
         reject(error);
       });
   });

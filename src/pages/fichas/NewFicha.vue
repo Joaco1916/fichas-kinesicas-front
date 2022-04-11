@@ -156,12 +156,20 @@
     <q-card-actions class="q-px-lg j-np-button">
       <q-btn
         unelevated
+        :disable="loading_action"
         size="lg"
         @click="onSubmit(this.pacienteActual)"
         style="background: #00bfad !important"
         class="full-width text-white"
         label="Crear"
-      />
+      >
+        <q-spinner
+          v-if="loading_action"
+          color="primary"
+          size="20px"
+          class="j-btnSpinner"
+        />
+      </q-btn>
     </q-card-actions>
     <q-card-actions class="q-px-lg">
       <q-btn
@@ -199,10 +207,12 @@ export default {
       irradiacion: null,
       atenuacion_agravacion: null,
       observaciones: null,
+      loading_action: false,
     };
   },
   methods: {
     onSubmit(patient) {
+      this.loading_action = true;
       this.$store
         .dispatch("fichas/createFicha", {
           patient: patient,
@@ -227,16 +237,18 @@ export default {
           },
         })
         .then(async () => {
+          this.loading_action = false;
           this.$router.push({ name: "pacientes" });
         })
         .catch((error) => {
+          this.loading_action = false;
           Notify.create({
             color: "negative",
             position: "top",
             message: "Falló la creación de la ficha",
             icon: "report",
           });
-          this.$router.push({ name: "pacientes" });
+          //this.$router.push({ name: "pacientes" });
         });
     },
     cancel() {
@@ -296,5 +308,8 @@ export default {
 .j-nf-tgg {
   margin-left: 6px;
   margin-right: 6px;
+}
+.j-btnSpinner {
+  margin-left: 6px;
 }
 </style>
